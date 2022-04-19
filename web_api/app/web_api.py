@@ -18,9 +18,10 @@ def hello():
     writeFile(counterFileName, str(counter))
         
     if(counter % 2) == 0:
-        return f"Hello! ({counter})"
+        return f"Hello! (counter: {counter})"
     else:
-        return f"Hi! ({counter})"
+        # the web client should be configured to retry on 500s
+        return f"Boo! (counter: {counter})", 500
 
 
 def readFile(fileName:str):
