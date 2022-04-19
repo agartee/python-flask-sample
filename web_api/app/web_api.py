@@ -1,12 +1,41 @@
-from flask import Flask
+from cgitb import reset
+from flask import Flask, request, session
 import os
 
 
 app = Flask(__name__)
+app.secret_key = 'the random string'
+
+@app.route("/return-codes")
+def index():
+    print(f'initial session var: {str(session.get("codes"))}')
+    if not session.get("codes"):
+        print("populating session var...")
+        session["codes"] = request.args.get("codes").split(",")
+        print(f'session var: {str(session.get("codes"))}')
+    
+    codes = session["codes"]
+    code = codes.pop(0)
+    session["codes"] = codes
+    
+    print(str(code))
+    print(f'session var after pop: {str(session.get("codes"))}')
+
+    if not session["codes"]:
+        session.pop("codes")
+
+    print(f'final session var: {str(session.get("codes"))}')
+    return f"result: {code}", code
 
 
-@app.route("/")
-def hello():
+@app.route("/clear")
+def clear_session():
+    session.pop("codes")
+    return "", 201
+
+
+@app.route("/counter")
+def counter():
     counterFileName = f"{get_root_app_dir()}/data/counter.txt"
     counterData = readFile(counterFileName)
     
@@ -22,7 +51,6 @@ def hello():
     else:
         # the web client should be configured to retry on 500s
         return f"Boo! (counter: {counter})", 500
-
 
 def readFile(fileName:str):
     if not os.path.exists(fileName):
