@@ -17,7 +17,9 @@ def index():
     codes = session["codes"]
     code = codes.pop(0)
     session["codes"] = codes
-    
+
+    # code = session["codes"].pop(0)
+
     print(str(code))
     print(f'session var after pop: {str(session.get("codes"))}')
 
