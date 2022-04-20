@@ -18,8 +18,6 @@ def index():
     code = codes.pop(0)
     session["codes"] = codes
 
-    # code = session["codes"].pop(0)
-
     print(str(code))
     print(f'session var after pop: {str(session.get("codes"))}')
 
@@ -36,7 +34,7 @@ def clear_session():
     return "", 201
 
 
-@app.route("/counter")
+@app.route("/")
 def counter():
     counterFileName = f"{get_root_app_dir()}/data/counter.txt"
     counterData = readFile(counterFileName)
@@ -51,7 +49,7 @@ def counter():
     if(counter % 2) == 0:
         return f"Hello! (counter: {counter})"
     else:
-        # the web client should be configured to retry on 500s
+        # note: the web client should be configured to retry on 500s
         return f"Boo! (counter: {counter})", 500
 
 def readFile(fileName:str):
